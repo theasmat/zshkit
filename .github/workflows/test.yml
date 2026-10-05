@@ -1,0 +1,26 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  install:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint install script
+        run: |
+          brew install shellcheck
+          shellcheck install.sh
+
+      - name: Install twice (idempotency)
+        run: |
+          export ZSHKIT_REPO="$GITHUB_WORKSPACE"
+          export ZSHKIT_MINIMAL=1
+          bash install.sh
+          bash install.sh
+
+      - name: Smoke test
+        run: zsh -i -c 'command -v starship && command -v zoxide && echo zshkit-ok'
