@@ -5,9 +5,13 @@ ZSHKIT_HOME="${ZSHKIT_ROOT:h}"
 source "$ZSHKIT_ROOT/options.zsh"
 source "$ZSHKIT_ROOT/env.zsh"
 
-# Plugins: antidote compiles plugins.txt into a static plugins.zsh
-_zk_antidote="${HOMEBREW_PREFIX:-/opt/homebrew}/opt/antidote/share/antidote/antidote.zsh"
-if [[ -r $_zk_antidote ]]; then
+# Plugins: antidote (git install or Homebrew) compiles plugins.txt into plugins.zsh
+_zk_antidote=""
+for _zk_c in "$HOME/.antidote/antidote.zsh" \
+             "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/antidote/share/antidote/antidote.zsh"; do
+  if [[ -r $_zk_c ]]; then _zk_antidote=$_zk_c; break; fi
+done
+if [[ -n $_zk_antidote ]]; then
   source "$_zk_antidote"
   _zk_txt="$ZSHKIT_ROOT/plugins.txt"
   _zk_zsh="$ZSHKIT_ROOT/plugins.zsh"
@@ -16,7 +20,7 @@ if [[ -r $_zk_antidote ]]; then
   fi
   source "$_zk_zsh"
 fi
-unset _zk_antidote _zk_txt _zk_zsh
+unset _zk_antidote _zk_c _zk_txt _zk_zsh
 
 # Completion: full rebuild at most once per 24h, cached otherwise
 _zshkit_compinit() {

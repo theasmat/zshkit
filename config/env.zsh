@@ -10,6 +10,12 @@ typeset -U path PATH
 path=("$HOME/.local/bin" $path)
 [[ -r "$HOME/.local/bin/env" ]] && source "$HOME/.local/bin/env"
 
+# Binaries from official installers (atuin, fzf git install)
+for _zk_d in "$HOME/.atuin/bin" "$HOME/.fzf/bin"; do
+  [[ -d $_zk_d ]] && path=("$_zk_d" $path)
+done
+unset _zk_d
+
 # Bun
 export BUN_INSTALL="${BUN_INSTALL:-$HOME/.bun}"
 [[ -d "$BUN_INSTALL/bin" ]] && path=("$BUN_INSTALL/bin" $path)
